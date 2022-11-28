@@ -20,10 +20,10 @@
       </div>
     </section>
     <section v-else>
-      <div v-for="(todo, index) in todos" class="todo">
-        <p>{{ todo }}</p>
+      <div v-for="todo in todos" :key="todo.id" class="todo">
+        <p>{{ todo.title }}</p>
         <div>
-          <button @click="removeTodo(index)" class="btn-remove-todo">
+          <button @click="removeTodo(todo.id)" class="btn-remove-todo">
             &times;
           </button>
         </div>
@@ -44,13 +44,16 @@ export default {
   methods: {
     addTodo() {
       if (this.todoTitle !== "") {
-        this.todos.push(this.todoTitle);
+        this.todos.push({
+          id: Math.floor(Math.random() * 1000),
+          title: this.todoTitle,
+        });
         this.todoTitle = "";
       }
     },
 
     removeTodo(id) {
-      this.todos = this.todos.filter((_todo, index) => index !== id);
+      this.todos = this.todos.filter((todo) => todo.id !== id);
     },
   },
 };
