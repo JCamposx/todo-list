@@ -1,47 +1,84 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  <nav class="navbar">
+    <img class="logo" src="./assets/logo.svg" alt="Logo" width="32" />
+    <div>Todo List App</div>
+  </nav>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
+  <main class="container">
+    <section>
+      <form class="add-todo-form">
+        <input type="text" placeholder="Title" />
+        <div>
+          <button>Add</button>
+        </div>
+      </form>
+    </section>
 
-  <main>
-    <TheWelcome />
+    <section>
+      <div class="todo">
+        <p>Todo 1</p>
+        <div>
+          <button class="btn-remove-todo">&times;</button>
+        </div>
+      </div>
+    </section>
   </main>
 </template>
 
+<script></script>
+
 <style scoped>
-header {
-  line-height: 1.5;
+.navbar {
+  display: flex;
+  align-items: center;
+  background: var(--navbar-color);
+  padding: 15px;
+  padding-inline: 20px;
+  margin-bottom: 40px;
 }
 
 .logo {
-  display: block;
-  margin: 0 auto 2rem;
+  padding-inline-end: 8px;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+.add-todo-form {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+.add-todo-form input {
+  width: 80%;
+  border: none;
+  border-radius: 5px;
+  padding-inline: 10px;
+}
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.add-todo-form button {
+  background: var(--accent-color);
+  color: var(--text-color);
+  padding-inline-start: 15px;
+  padding-inline-end: 15px;
+  height: 35px;
+}
+
+.todo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--navbar-color);
+  padding-inline: 25px;
+  border-radius: 5px;
+  height: 60px;
+  margin-top: 15px;
+  border-radius: 10px;
+}
+
+.btn-remove-todo {
+  width: 28px;
+  height: 28px;
+  font-size: 22px;
+  background: var(--danger-color);
+  color: var(--text-color);
 }
 </style>
