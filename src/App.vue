@@ -5,6 +5,13 @@
   </nav>
 
   <main class="container">
+    <Alert
+      :show="showAlert"
+      message="Todo title is required"
+      type="danger"
+      @close="showAlert = false"
+    />
+
     <section>
       <form class="add-todo-form">
         <input v-model="todoTitle" type="text" placeholder="Title" />
@@ -33,11 +40,18 @@
 </template>
 
 <script>
+import Alert from "./components/Alert.vue";
+
 export default {
+  components: {
+    Alert,
+  },
+
   data() {
     return {
       todoTitle: "",
       todos: [],
+      showAlert: false,
     };
   },
 
@@ -49,7 +63,10 @@ export default {
           title: this.todoTitle,
         });
         this.todoTitle = "";
+        this.showAlert = false;
+        return;
       }
+      this.showAlert = true;
     },
 
     removeTodo(id) {
@@ -92,6 +109,7 @@ export default {
   padding-inline-start: 15px;
   padding-inline-end: 15px;
   height: 35px;
+  cursor: pointer;
 }
 
 .no-todo {
@@ -132,5 +150,6 @@ export default {
   font-size: 22px;
   background: var(--danger-color);
   color: var(--text-color);
+  cursor: pointer;
 }
 </style>
