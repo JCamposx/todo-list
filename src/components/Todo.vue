@@ -2,22 +2,30 @@
   <div v-for="todo in todos" :key="todo.id" class="todo">
     <p>{{ todo.title }}</p>
     <div>
-      <button @click="$emit('click', todo.id)" class="btn-remove-todo">
+      <Btn type="secondary" class="btn-edit">
+        <Pencil />
+      </Btn>
+
+      <Btn type="danger" @click="$emit('click', todo.id)" class="btn-remove">
         &times;
-      </button>
+      </Btn>
     </div>
   </div>
 </template>
 
 <script>
+import Btn from "./Btn.vue";
+import Pencil from "./icons/Pencil.vue";
+
 export default {
+  components: { Btn, Pencil },
+
   props: {
     todos: {
       required: true,
       type: Array,
     },
   },
-
   emits: ["click"],
 };
 </script>
@@ -38,12 +46,15 @@ export default {
   height: 70px;
 }
 
-.btn-remove-todo {
+.btn-edit {
   width: 28px;
   height: 28px;
   font-size: 22px;
-  background: var(--danger-color);
-  color: var(--text-color);
-  cursor: pointer;
+}
+
+.btn-remove {
+  width: 28px;
+  height: 28px;
+  font-size: 22px;
 }
 </style>

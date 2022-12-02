@@ -2,13 +2,14 @@
 @import "./normalize.css";
 
 :root {
-  --background-color: #23272E;
-  --text-color: #FFF;
-  --dark-color: #15181C;
+  --background-color: #23272e;
+  --text-color: #fff;
+  --dark-color: #15181c;
   --accent-color: #41b883;
-  --danger-color: #EF596F;
-  --warning-color: #E5C07B;
-  --info-color: #61AFEF;
+  --danger-color: #ef596f;
+  --warning-color: #e5c07b;
+  --info-color: #61afef;
+  --secondary-color: grey;
 }
 
 html {

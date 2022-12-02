@@ -30,11 +30,11 @@ export default {
       const options = {
         danger: "var(--danger-color)",
         warning: "var(--warning-color)",
-        info: "var(--info-color)"
-      }
+        info: "var(--info-color)",
+      };
 
-      return options[this.type]
-    }
+      return options[this.type];
+    },
   },
 
   emits: ["close"],
