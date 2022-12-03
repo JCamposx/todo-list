@@ -2,11 +2,11 @@
   <div v-for="todo in todos" :key="todo.id" class="todo">
     <p>{{ todo.title }}</p>
     <div>
-      <Btn type="secondary" class="btn-edit">
+      <Btn type="secondary" @click="$emit('edit', todo.id)" class="btn-edit">
         <Pencil />
       </Btn>
 
-      <Btn type="danger" @click="$emit('click', todo.id)" class="btn-remove">
+      <Btn type="danger" @click="$emit('remove', todo.id)" class="btn-remove">
         &times;
       </Btn>
     </div>
@@ -26,7 +26,7 @@ export default {
       type: Array,
     },
   },
-  emits: ["click"],
+  emits: ["remove", "edit"],
 };
 </script>
 
