@@ -4,7 +4,7 @@
     <div>
       <Btn
         class="btn"
-        type="success"
+        variant="success"
         @click="
           $emit('submit', todoTitle);
           todoTitle = '';

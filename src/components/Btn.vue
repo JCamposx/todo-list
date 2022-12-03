@@ -1,5 +1,10 @@
 <template>
-  <button @click.prevent="$emit('click')" :style="{ backgroundColor }">
+  <button
+    @click.prevent="$emit('click')"
+    class="btn"
+    :style="{ backgroundColor }"
+    v-bind="$attrs"
+  >
     <slot />
   </button>
 </template>
@@ -7,7 +12,7 @@
 <script>
 export default {
   props: {
-    type: {
+    variant: {
       required: false,
       default: "danger",
       validator(value) {
@@ -28,7 +33,7 @@ export default {
         secondary: "var(--secondary-color)",
       };
 
-      return options[this.type];
+      return options[this.variant];
     },
   },
 
@@ -37,7 +42,7 @@ export default {
 </script>
 
 <style scoped>
-button {
+.btn {
   color: var(--text-color);
   border: none;
   height: 35px;

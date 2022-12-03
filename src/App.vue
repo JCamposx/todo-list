@@ -16,8 +16,8 @@
 
       <template #footer>
         <div class="edit-todo-modal-footer">
-          <Btn type="secondary" @click="editTodoForm.show = false">Close</Btn>
-          <Btn type="success" @click="updateTodo">Confirm</Btn>
+          <Btn variant="secondary" @click="editTodoForm.show = false">Close</Btn>
+          <Btn variant="success" @click="updateTodo">Confirm</Btn>
         </div>
       </template>
     </Modal>
@@ -25,7 +25,7 @@
     <Alert
       :show="showAlert"
       message="Todo title is required"
-      type="danger"
+      variant="danger"
       @close="showAlert = false"
     />
 
