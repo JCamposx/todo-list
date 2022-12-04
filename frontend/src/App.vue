@@ -100,7 +100,7 @@ export default {
     async getTodos() {
       this.isLoading = true;
       try {
-        const res = await axios.get("http://localhost:8080/todos");
+        const res = await axios.get("api/todos");
         this.todos = await res.data;
         this.isLoading = false;
       } catch (e) {
@@ -115,7 +115,7 @@ export default {
         return;
       }
 
-      const res = await axios.post("http://localhost:8080/todos", {
+      const res = await axios.post("api/todos", {
         title: title,
       });
 
@@ -130,12 +130,9 @@ export default {
     },
 
     async updateTodo() {
-      await axios.put(
-        `http://localhost:8080/todos/${this.editTodoForm.todo.id}`,
-        {
-          title: this.editTodoForm.todo.title,
-        }
-      );
+      await axios.put(`api/todos/${this.editTodoForm.todo.id}`, {
+        title: this.editTodoForm.todo.title,
+      });
 
       const todo = this.todos.find(
         (todo) => todo.id === this.editTodoForm.todo.id
@@ -147,7 +144,7 @@ export default {
     },
 
     async removeTodo(id) {
-      await axios.delete(`http://localhost:8080/todos/${id}`);
+      await axios.delete(`api/todos/${id}`);
 
       this.todos = this.todos.filter((todo) => todo.id !== id);
     },
