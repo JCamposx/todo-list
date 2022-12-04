@@ -16,17 +16,19 @@
 
       <template #footer>
         <div class="edit-todo-modal-footer">
-          <Btn variant="secondary" @click="editTodoForm.show = false">Close</Btn>
+          <Btn variant="secondary" @click="editTodoForm.show = false">
+            Close
+          </Btn>
           <Btn variant="success" @click="updateTodo">Confirm</Btn>
         </div>
       </template>
     </Modal>
 
     <Alert
-      :show="showAlert"
-      message="Todo title is required"
-      variant="danger"
-      @close="showAlert = false"
+      :show="alert.show"
+      :message="alert.message"
+      :variant="alert.type"
+      @close="alert.show = false"
     />
 
     <section>
@@ -51,6 +53,7 @@ import Btn from "./components/Btn.vue";
 import Modal from "./components/Modal.vue";
 import Navbar from "./components/Navbar.vue";
 import Todo from "./components/Todo.vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -66,7 +69,11 @@ export default {
     return {
       todoTitle: "",
       todos: [],
-      showAlert: false,
+      alert: {
+        show: false,
+        message: "",
+        type: "",
+      },
       editTodoForm: {
         show: false,
         todo: {
@@ -77,19 +84,33 @@ export default {
     };
   },
 
+  created() {
+    this.getTodos();
+  },
+
   methods: {
-    addTodo(title) {
+    async getTodos() {
+      try {
+        const res = await axios.get("http://localhost:8080/todos");
+        this.todos = await res.data;
+      } catch (e) {
+        this.showAlert("Failed loading todos");
+      }
+    },
+
+    async addTodo(title) {
       if (title === "") {
-        this.showAlert = true;
+        this.showAlert("Todo title is required");
         return;
       }
 
-      this.todos.push({
-        id: Math.floor(Math.random() * 1000),
+      const res = await axios.post("http://localhost:8080/todos", {
         title: title,
       });
 
-      this.showAlert = false;
+      this.todos.push(res.data);
+
+      this.alert.show = false;
     },
 
     showEditTodoForm(id) {
@@ -97,7 +118,14 @@ export default {
       this.editTodoForm.todo = { ...this.todos.find((todo) => todo.id === id) };
     },
 
-    updateTodo() {
+    async updateTodo() {
+      await axios.put(
+        `http://localhost:8080/todos/${this.editTodoForm.todo.id}`,
+        {
+          title: this.editTodoForm.todo.title,
+        }
+      );
+
       const todo = this.todos.find(
         (todo) => todo.id === this.editTodoForm.todo.id
       );
@@ -107,8 +135,16 @@ export default {
       this.editTodoForm.show = false;
     },
 
-    removeTodo(id) {
+    async removeTodo(id) {
+      await axios.delete(`http://localhost:8080/todos/${id}`);
+
       this.todos = this.todos.filter((todo) => todo.id !== id);
+    },
+
+    showAlert(message, type = "danger") {
+      this.alert.show = true;
+      this.alert.message = message;
+      this.alert.type = type;
     },
   },
 };
