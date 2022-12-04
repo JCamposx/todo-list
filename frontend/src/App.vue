@@ -2,27 +2,12 @@
   <Navbar />
 
   <main class="container">
-    <Modal :show="editTodoForm.show" @close="editTodoForm.show = false">
-      <template #header>
-        <h2>Edit todo</h2>
-      </template>
-
-      <template #body>
-        <form class="edit-todo-modal-form">
-          <label>Todo title</label>
-          <input type="text" v-model="editTodoForm.todo.title" />
-        </form>
-      </template>
-
-      <template #footer>
-        <div class="edit-todo-modal-footer">
-          <Btn variant="secondary" @click="editTodoForm.show = false">
-            Close
-          </Btn>
-          <Btn variant="success" @click="updateTodo">Confirm</Btn>
-        </div>
-      </template>
-    </Modal>
+    <EditTodoForm
+      :show="editTodoForm.show"
+      @close="editTodoForm.show = false"
+      @submit="updateTodo"
+      v-model="editTodoForm.todo.title"
+    />
 
     <Alert
       :show="alert.show"
@@ -51,7 +36,7 @@
 </template>
 
 <script>
-import AddTodoForm from "./components/AddTodoForm.vue";
+import AddTodoForm from "./components/TodoForm/AddTodoForm.vue";
 import Alert from "./components/Alert.vue";
 import Btn from "./components/Btn.vue";
 import Modal from "./components/Modal.vue";
@@ -59,6 +44,7 @@ import Navbar from "./components/Navbar.vue";
 import Spinner from "./components/Spinner.vue";
 import Todo from "./components/Todo.vue";
 import axios from "axios";
+import EditTodoForm from "./components/TodoForm/EditTodoForm.vue";
 
 export default {
   components: {
@@ -69,6 +55,7 @@ export default {
     Navbar,
     Spinner,
     Todo,
+    EditTodoForm,
   },
 
   data() {
@@ -159,20 +146,6 @@ export default {
 </script>
 
 <style scoped>
-.edit-todo-modal-form input {
-  width: 97%;
-  border: none;
-  border-radius: 5px;
-  padding-inline: 10px;
-  height: 35px;
-  margin-top: 10px;
-}
-
-.edit-todo-modal-footer {
-  display: flex;
-  justify-content: center;
-}
-
 .no-todo {
   display: flex;
   align-items: center;
