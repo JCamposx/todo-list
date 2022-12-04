@@ -35,7 +35,11 @@
       <AddTodoForm @submit="addTodo" />
     </section>
 
-    <section v-if="todos.length === 0">
+    <section>
+      <Spinner v-if="isLoading" />
+    </section>
+
+    <section v-if="todos.length === 0 && !isAnyError">
       <div class="no-todo">
         <p>You don't have any todo</p>
       </div>
@@ -52,17 +56,19 @@ import Alert from "./components/Alert.vue";
 import Btn from "./components/Btn.vue";
 import Modal from "./components/Modal.vue";
 import Navbar from "./components/Navbar.vue";
+import Spinner from "./components/Spinner.vue";
 import Todo from "./components/Todo.vue";
 import axios from "axios";
 
 export default {
   components: {
-    Alert,
-    Navbar,
     AddTodoForm,
-    Todo,
-    Modal,
+    Alert,
     Btn,
+    Modal,
+    Navbar,
+    Spinner,
+    Todo,
   },
 
   data() {
@@ -74,6 +80,8 @@ export default {
         message: "",
         type: "",
       },
+      isLoading: true,
+      isAnyError: false,
       editTodoForm: {
         show: false,
         todo: {
@@ -90,11 +98,14 @@ export default {
 
   methods: {
     async getTodos() {
+      this.isLoading = true;
       try {
         const res = await axios.get("http://localhost:8080/todos");
         this.todos = await res.data;
+        this.isLoading = false;
       } catch (e) {
         this.showAlert("Failed loading todos");
+        this.isAnyError = true;
       }
     },
 
