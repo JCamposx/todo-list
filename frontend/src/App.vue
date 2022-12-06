@@ -24,7 +24,8 @@
       <Spinner v-if="isLoading" />
     </section>
 
-    <section v-if="todos.length === 0 && !isAnyError">
+    <section v-if="todos === null"></section>
+    <section v-else-if="todos.length === 0 && !isAnyError">
       <div class="no-todo">
         <p>You don't have any todo</p>
       </div>
@@ -44,14 +45,13 @@ import Todo from "./components/Todo.vue";
 import axios from "axios";
 import EditTodoForm from "./components/TodoForm/EditTodoForm.vue";
 import { reactive, ref } from "vue";
+import { useFetch } from "./composables/fetch.js";
 
-const todos = ref([]);
 const alert = reactive({
   show: false,
   message: "",
   variant: "danger",
 });
-const isLoading = ref(true);
 const isAnyError = ref(false);
 const editTodoForm = reactive({
   show: false,
@@ -61,19 +61,9 @@ const editTodoForm = reactive({
   },
 });
 
-getTodos();
-
-async function getTodos() {
-  isLoading.value = true;
-  try {
-    const res = await axios.get("api/todos");
-    todos.value = res.data;
-    isLoading.value = false;
-  } catch (e) {
-    showAlert("Failed loading todos");
-    isAnyError.value = true;
-  }
-}
+const { data: todos, isLoading } = useFetch("/api/todos", {
+  onError: () => showAlert("Failed loading todos"),
+});
 
 async function addTodo(title) {
   if (title === "") {
@@ -88,11 +78,6 @@ async function addTodo(title) {
   todos.value.push(res.data);
 
   alert.show = false;
-}
-
-function showEditTodoForm(id) {
-  editTodoForm.show = true;
-  editTodoForm.todo = { ...todos.value.find((todo) => todo.id === id) };
 }
 
 async function updateTodo() {
@@ -112,7 +97,12 @@ async function removeTodo(id) {
   todos.value = todos.value.filter((todo) => todo.id !== id);
 }
 
-async function showAlert(message, type = "danger") {
+function showEditTodoForm(id) {
+  editTodoForm.show = true;
+  editTodoForm.todo = { ...todos.value.find((todo) => todo.id === id) };
+}
+
+function showAlert(message, type = "danger") {
   alert.show = true;
   alert.message = message;
   alert.type = type;
