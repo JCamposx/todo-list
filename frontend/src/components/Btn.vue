@@ -4,37 +4,23 @@
     class="btn"
     :style="{ backgroundColor }"
     v-bind="$attrs"
+    :variant="variant"
   >
     <slot />
   </button>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import {
+  useBackgroundColor,
+  backgroundColorProps,
+} from "../composables/backgroundColor.js";
 
 const props = defineProps({
-  variant: {
-    required: false,
-    default: "danger",
-    validator(value) {
-      const options = ["danger", "warning", "info", "success", "secondary"];
-
-      return options.includes(value);
-    },
-  },
+  ...backgroundColorProps,
 });
 
-const backgroundColor = computed(() => {
-  const options = {
-    danger: "var(--danger-color)",
-    warning: "var(--warning-color)",
-    info: "var(--info-color)",
-    success: "var(--accent-color)",
-    secondary: "var(--secondary-color)",
-  };
-
-  return options[props.variant];
-});
+const backgroundColor = useBackgroundColor(props);
 
 defineEmits(["click"]);
 </script>

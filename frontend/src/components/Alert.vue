@@ -6,9 +6,13 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import {
+  useBackgroundColor,
+  backgroundColorProps,
+} from "../composables/backgroundColor.js";
 
 const props = defineProps({
+  ...backgroundColorProps,
   show: {
     required: true,
     type: Boolean,
@@ -17,24 +21,9 @@ const props = defineProps({
     required: true,
     type: String,
   },
-  variant: {
-    required: false,
-    default: "danger",
-    validator(value) {
-      return ["danger", "warning", "info"].includes(value);
-    },
-  },
 });
 
-const backgroundColor = computed(() => {
-  const options = {
-    danger: "var(--danger-color)",
-    warning: "var(--warning-color)",
-    info: "var(--info-color)",
-  };
-
-  return options[props.variant];
-});
+const backgroundColor = useBackgroundColor(props);
 
 defineEmits(["close"]);
 </script>
