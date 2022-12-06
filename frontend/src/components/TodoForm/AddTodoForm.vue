@@ -16,20 +16,13 @@
   </form>
 </template>
 
-<script>
+<script setup>
 import Btn from "../Btn.vue";
+import { ref } from "vue";
 
-export default {
-  components: { Btn },
+const todoTitle = ref("");
 
-  data() {
-    return {
-      todoTitle: "",
-    };
-  },
-
-  emits: ["submit"],
-};
+defineEmits(["submit"]);
 </script>
 
 <style scoped>

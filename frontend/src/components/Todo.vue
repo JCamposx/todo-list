@@ -6,28 +6,29 @@
         <Pencil />
       </Btn>
 
-      <Btn variant="danger" @click="$emit('remove', todo.id)" class="btn-remove">
+      <Btn
+        variant="danger"
+        @click="$emit('remove', todo.id)"
+        class="btn-remove"
+      >
         &times;
       </Btn>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import Btn from "./Btn.vue";
 import Pencil from "./icons/Pencil.vue";
 
-export default {
-  components: { Btn, Pencil },
-
-  props: {
-    todos: {
-      required: true,
-      type: Array,
-    },
+const props = defineProps({
+  todos: {
+    required: true,
+    type: Array,
   },
-  emits: ["remove", "edit"],
-};
+});
+
+defineEmits(["remove", "edit"]);
 </script>
 
 <style scoped>

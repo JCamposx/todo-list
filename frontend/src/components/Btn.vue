@@ -9,36 +9,34 @@
   </button>
 </template>
 
-<script>
-export default {
-  props: {
-    variant: {
-      required: false,
-      default: "danger",
-      validator(value) {
-        const options = ["danger", "warning", "info", "success", "secondary"];
+<script setup>
+import { computed } from "vue";
 
-        return options.includes(value);
-      },
+const props = defineProps({
+  variant: {
+    required: false,
+    default: "danger",
+    validator(value) {
+      const options = ["danger", "warning", "info", "success", "secondary"];
+
+      return options.includes(value);
     },
   },
+});
 
-  computed: {
-    backgroundColor() {
-      const options = {
-        danger: "var(--danger-color)",
-        warning: "var(--warning-color)",
-        info: "var(--info-color)",
-        success: "var(--accent-color)",
-        secondary: "var(--secondary-color)",
-      };
+const backgroundColor = computed(() => {
+  const options = {
+    danger: "var(--danger-color)",
+    warning: "var(--warning-color)",
+    info: "var(--info-color)",
+    success: "var(--accent-color)",
+    secondary: "var(--secondary-color)",
+  };
 
-      return options[this.variant];
-    },
-  },
+  return options[props.variant];
+});
 
-  emits: ["click"],
-};
+defineEmits(["click"]);
 </script>
 
 <style scoped>

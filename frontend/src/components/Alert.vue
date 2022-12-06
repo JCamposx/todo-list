@@ -1,50 +1,42 @@
 <template>
   <div v-if="show" class="alert" :style="{ backgroundColor }">
     <div>{{ message }}</div>
-    <div @click="close" class="close-alert">&times;</div>
+    <div @click="$emit('close')" class="close-alert">&times;</div>
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    show: {
-      required: true,
-      type: Boolean,
-    },
-    message: {
-      required: true,
-      type: String,
-    },
-    type: {
-      required: false,
-      default: "danger",
-      validator(value) {
-        return ["danger", "warning", "info"].includes(value);
-      },
+<script setup>
+import { computed } from "vue";
+
+const props = defineProps({
+  show: {
+    required: true,
+    type: Boolean,
+  },
+  message: {
+    required: true,
+    type: String,
+  },
+  variant: {
+    required: false,
+    default: "danger",
+    validator(value) {
+      return ["danger", "warning", "info"].includes(value);
     },
   },
+});
 
-  computed: {
-    backgroundColor() {
-      const options = {
-        danger: "var(--danger-color)",
-        warning: "var(--warning-color)",
-        info: "var(--info-color)",
-      };
+const backgroundColor = computed(() => {
+  const options = {
+    danger: "var(--danger-color)",
+    warning: "var(--warning-color)",
+    info: "var(--info-color)",
+  };
 
-      return options[this.type];
-    },
-  },
+  return options[props.variant];
+});
 
-  emits: ["close"],
-
-  methods: {
-    close() {
-      this.$emit("close");
-    },
-  },
-};
+defineEmits(["close"]);
 </script>
 
 <style scoped>

@@ -16,41 +16,44 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    show: {
-      default: false,
-    },
-  },
+<script setup>
+import { ref, onMounted, onBeforeUnmount } from "vue";
 
-  data() {
-    return {
-      clickListener: (e) => {
-        if (e.target === this.$refs.modal) {
-          this.$emit("close");
-        }
-      },
-      closeOnEscapeListener: (e) => {
-        if (e.key === "Escape") {
-          this.$emit("close");
-        }
-      },
-    };
+defineProps({
+  show: {
+    default: false,
   },
+});
 
-  emits: ["close"],
+const modal = ref(null);
 
-  mounted() {
-    window.addEventListener("click", this.clickListener);
-    window.addEventListener("keydown", this.closeOnEscapeListener);
-  },
+const emit = defineEmits(["close"]);
 
-  beforeUnmount() {
-    window.removeEventListener("click", this.clickListener);
-    window.removeEventListener("keydown", this.closeOnEscapeListener);
-  },
+const clickListener = (e) => {
+  if (e.target === modal.value) {
+    emit("close");
+  }
 };
+
+const closeOnEscapeListener = (e) => {
+  if (e.key === "Escape") {
+    emit("close");
+  }
+
+  if (e.key === "Enter") {
+    emit("submit");
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("click", clickListener);
+  window.addEventListener("keydown", closeOnEscapeListener);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("click", clickListener);
+  window.removeEventListener("keydown", closeOnEscapeListener);
+});
 </script>
 
 <style scoped>
