@@ -32,8 +32,8 @@ import Todo from "@/components/Todo.vue";
 import AddTodoForm from "@/components/TodoForm/AddTodoForm.vue";
 import { useFetch } from "@/composables/fetch.js";
 import axios from "axios";
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { onMounted, ref } from "vue";
+import { onBeforeRouteLeave, useRouter } from "vue-router";
 import { alertData, useShowAlert } from "../composables/showAlert.js";
 
 const alert = alertData;
@@ -41,7 +41,11 @@ const isAnyError = ref(false);
 
 const router = useRouter();
 
-const { data: todos, isLoading } = useFetch("/api/todos", {
+const {
+  data: todos,
+  isLoading,
+  flashMessage,
+} = useFetch("/api/todos", {
   onError: () => useShowAlert("Failed loading todos"),
 });
 
@@ -71,6 +75,16 @@ async function removeTodo(id) {
 function editTodo(id) {
   router.push(`/todos/${id}/edit`);
 }
+
+onMounted(() => {
+  if (flashMessage !== null) {
+    useShowAlert(alert, "Todo title updated successfully", "info");
+  }
+});
+
+onBeforeRouteLeave(() => {
+  alert.show = false;
+});
 </script>
 
 <style scoped>

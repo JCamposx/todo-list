@@ -1,5 +1,5 @@
-import { ref, watch } from "vue";
 import axios from "axios";
+import { ref, watch } from "vue";
 
 function useFetch(url, options = { onError: null }) {
   const data = ref(null);
@@ -10,6 +10,9 @@ function useFetch(url, options = { onError: null }) {
   if (options.onError !== null) {
     stopErrorWatcher = watch(error, (e) => options.onError(e));
   }
+
+  const flashMessage = localStorage.getItem("FLASH_MESSAGE");
+  localStorage.clear();
 
   axios
     .get(url)
@@ -24,6 +27,7 @@ function useFetch(url, options = { onError: null }) {
     data,
     error,
     isLoading,
+    flashMessage,
   };
 }
 
