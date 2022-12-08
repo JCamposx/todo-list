@@ -1,11 +1,4 @@
 <template>
-  <EditTodoForm
-    :show="editTodoForm.show"
-    @close="editTodoForm.show = false"
-    @submit="updateTodo"
-    v-model="editTodoForm.todo.title"
-  />
-
   <Alert
     :show="alert.show"
     :message="alert.message"
@@ -28,41 +21,33 @@
     </div>
   </section>
   <section v-else>
-    <Todo :todos="todos" @edit="showEditTodoForm" @remove="removeTodo" />
+    <Todo :todos="todos" @edit="editTodo" @remove="removeTodo" />
   </section>
 </template>
 
 <script setup>
-import AddTodoForm from "@/components/TodoForm/AddTodoForm.vue";
 import Alert from "@/components/Alert.vue";
 import Spinner from "@/components/Spinner.vue";
 import Todo from "@/components/Todo.vue";
-import axios from "axios";
-import EditTodoForm from "@/components/TodoForm/EditTodoForm.vue";
-import { reactive, ref } from "vue";
+import AddTodoForm from "@/components/TodoForm/AddTodoForm.vue";
 import { useFetch } from "@/composables/fetch.js";
+import axios from "axios";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { alertData, useShowAlert } from "../composables/showAlert.js";
 
-const alert = reactive({
-  show: false,
-  message: "",
-  variant: "danger",
-});
+const alert = alertData;
 const isAnyError = ref(false);
-const editTodoForm = reactive({
-  show: false,
-  todo: {
-    id: 0,
-    title: "",
-  },
-});
+
+const router = useRouter();
 
 const { data: todos, isLoading } = useFetch("/api/todos", {
-  onError: () => showAlert("Failed loading todos"),
+  onError: () => useShowAlert("Failed loading todos"),
 });
 
 async function addTodo(title) {
   if (title === "") {
-    showAlert("Todo title is required");
+    useShowAlert(alert, "Todo title is required");
     return;
   }
 
@@ -75,32 +60,16 @@ async function addTodo(title) {
   alert.show = false;
 }
 
-async function updateTodo() {
-  await axios.put(`api/todos/${editTodoForm.todo.id}`, {
-    title: editTodoForm.todo.title,
-  });
-
-  const todo = todos.value.find((todo) => todo.id === editTodoForm.todo.id);
-  todo.title = editTodoForm.todo.title;
-
-  editTodoForm.show = false;
-}
-
 async function removeTodo(id) {
   await axios.delete(`api/todos/${id}`);
 
   todos.value = todos.value.filter((todo) => todo.id !== id);
+
+  useShowAlert(alert, "Todo removed successfully");
 }
 
-function showEditTodoForm(id) {
-  editTodoForm.show = true;
-  editTodoForm.todo = { ...todos.value.find((todo) => todo.id === id) };
-}
-
-function showAlert(message, type = "danger") {
-  alert.show = true;
-  alert.message = message;
-  alert.type = type;
+function editTodo(id) {
+  router.push(`/todos/${id}/edit`);
 }
 </script>
 
